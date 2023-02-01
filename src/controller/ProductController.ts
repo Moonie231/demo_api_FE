@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import productService from '../service/ProductService';
 import categoryService from '../service/CategoryService';
 
-class HomeController {
+class ProductController {
     private productService;
     private categoryService;
     constructor() {
@@ -64,4 +64,4 @@ class HomeController {
     }
 }
 
-export default new HomeController();
+export default new ProductController();

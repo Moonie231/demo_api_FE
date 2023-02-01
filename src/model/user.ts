@@ -5,7 +5,7 @@ export class User {
     @PrimaryGeneratedColumn()
     idUser: number;
     @Column({type: "varchar", length: 255})
-    username: string;
+    email: string;
     @Column({type: "varchar", length: 255})
     password: string;
     @Column()

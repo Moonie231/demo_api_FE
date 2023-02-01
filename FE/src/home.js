@@ -1,11 +1,90 @@
-showHome();
+
+
+showFormLogin();
+
+function showFormLogin() {
+    let html = `
+            <div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="login()">Submit</button>
+                <button type="submit" class="btn btn-primary" onclick="showFormRegister()">Register</button>
+            </div>`
+    $('#body').html(html);
+}
+
+function login() {
+    console.log(1)
+    let email = $('#email').val();
+    let password = $('#password').val();
+    let user = {
+        email: email,
+        password: password
+    }
+    console.log(JSON.stringify(user));
+    $.ajax({
+        type: "POST",
+        url: 'http://localhost:3000/auth/login',
+        data: JSON.stringify(user),
+        headers : {
+            'Content-Type': 'application/json',
+        },
+        success: (token) => {
+            localStorage.setItem('token',token)
+            console.log(1)
+            // alert('Product added successfully');
+            showHome();
+        }
+    })
+}
+
+function showFormRegister() {
+    $('#body').html(`
+<input type="text" id="email" placeholder="email">
+<input type="password" id="password" placeholder="password">
+
+<button onclick="register()">confirm</button>`)
+}
+
+function register() {
+    let email = $('#email').val();
+    let password = $('#password').val();
+    let user = {
+        email: email,
+        password: password,
+        role: 1
+    }
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3000/auth/register',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify(user),
+        success: () => {
+            showFormLogin()
+        }
+    })
+}
+
+function logOut() {
+    localStorage.clear()
+    showFormLogin()
+}
 
 function showList() {
     $.ajax({
         type: "GET",
         url: 'http://localhost:3000/products',
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: (data) => {
             let html = ``;
@@ -95,7 +174,15 @@ function showList() {
 }
 
 function showHome() {
-    let html = `
+    $.ajax({
+        type: "GET",
+        url: 'http://localhost:3000/products',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        success: (data) => {
+            let html = `
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -110,16 +197,19 @@ function showHome() {
             <tbody id="tbody">
             </tbody>
         </table>`;
-    $('#body').html(html);
-    showList();
+            $('#body').html(html);
+            showList();
+        }
+    })
 }
 
 function showFormAdd() {
     $.ajax({
         type: "GET",
         url: 'http://localhost:3000/products',
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: (data) => {
             let categories = ``;
@@ -174,8 +264,9 @@ function addProduct() {
         type: "POST",
         url: 'http://localhost:3000/products',
         data: JSON.stringify(product),
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: () => {
             alert('Product added successfully');
@@ -188,8 +279,9 @@ function deleteProduct(id) {
     $.ajax({
         type: "DELETE",
         url: `http://localhost:3000/products/${id}`,
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: () => {
             alert('Delete product successfully');
@@ -213,8 +305,9 @@ function editProduct(id) {
         type: "PUT",
         url: `http://localhost:3000/products/${id}`,
         data: JSON.stringify(product),
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: () => {
             alert('Edit product successfully');
@@ -291,8 +384,9 @@ function searchProduct(value) {
         type: "GET",
         url: `http://localhost:3000/products/find-by-name?name=${name}`,
         data: JSON.stringify(name),
-        headers : {
+        headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('token')
         },
         success: (data) => {
             console.log(data);

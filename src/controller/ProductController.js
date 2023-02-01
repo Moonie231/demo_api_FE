@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var ProductService_1 = require("../service/ProductService");
-var HomeController = /** @class */ (function () {
+var ProductController = /** @class */ (function () {
     function HomeController() {
         var _this = this;
         this.showHome = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
@@ -121,4 +121,4 @@ var HomeController = /** @class */ (function () {
     }
     return HomeController;
 }());
-exports["default"] = new HomeController();
+exports["default"] = new ProductController();
